@@ -29,13 +29,14 @@ namespace DragoniteNET.Controllers
             return await _context.User.AnyAsync(u => u.Email == email);
         }
 
+        // Taoj token user
         private string CreateToken(Users user)
         {
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, user.DisplayName),
                 new Claim(ClaimTypes.Email, user.Email),
-                //new Claim(ClaimTypes.UserData, user.UserId),
+                new Claim(ClaimTypes.UserData, user.UserId),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -45,7 +46,7 @@ namespace DragoniteNET.Controllers
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Audience"],
                 claims: claims,
-                //expires: DateTime.Now.AddHours(1),
+                expires: DateTime.Now.AddHours(6),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
