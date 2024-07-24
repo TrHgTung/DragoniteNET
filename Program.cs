@@ -9,6 +9,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var MyAllowSpecificOrigins = "AllowAllOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                      });
+});
+
 builder.Services.AddControllers();
 builder.Services.AddDbContext<DtaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -42,6 +52,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(MyAllowSpecificOrigins);
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
