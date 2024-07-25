@@ -42,6 +42,7 @@ namespace DragoniteNET.Controllers
 
             var getMails = await _context.Mail
                         .Where(m => m.UserId == userId)
+                        .Where(m => m.Status == "n")
                         .ToListAsync();
 
             return Ok(new { 
@@ -82,6 +83,7 @@ namespace DragoniteNET.Controllers
             //});
         }
 
+        [Authorize]
         [HttpPost("send")]
         public async Task<IActionResult> SendMails()
         {
