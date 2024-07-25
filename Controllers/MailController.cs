@@ -49,7 +49,7 @@ namespace DragoniteNET.Controllers
 
         // POST api/Mail        
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<Mails>> SaveMail([FromForm]  MailDto mailDto)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value; // lay gia tri UserId tu Claim
