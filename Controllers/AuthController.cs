@@ -37,6 +37,7 @@ namespace DragoniteNET.Controllers
                 new Claim(ClaimTypes.Name, user.DisplayName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.UserData, user.UserId),
+                new Claim(ClaimTypes.SerialNumber, user.SMTPPassword),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));

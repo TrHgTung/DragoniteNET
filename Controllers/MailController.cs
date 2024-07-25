@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using DragoniteNET.Dto;
+using DragoniteNET.Interface;
 
 namespace DragoniteNET.Controllers
 {
@@ -19,10 +20,12 @@ namespace DragoniteNET.Controllers
     public class MailController : ControllerBase
     {
         private readonly DtaContext _context;
+        public readonly IEmailService _emailsv;
 
-        public MailController(DtaContext context)
+        public MailController(DtaContext context, IEmailService emailService)
         {
             _context = context;
+            _emailsv = emailService;
         }
 
         // GET: api/Mail
@@ -64,7 +67,7 @@ namespace DragoniteNET.Controllers
                 MailSubject = mailDto.MailSubject,
                 MailContent = mailDto.MailContent,
                 Attachment = mailDto.Attachment,
-                Status = "1",
+                Status = "n",
                 TimeSent = DateTime.Now.ToString("d/m/yyyy"),
             };
 
@@ -79,6 +82,26 @@ namespace DragoniteNET.Controllers
             //});
         }
 
+        [HttpPost("send")]
+        public async Task<IActionResult> SendMails()
+        {
+            var smtpPassword = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber)?.Value; // lay gia tri UserId tu Claim
+            var fromAddress = User.Claims.FirstOrDefault(d => d.Type == ClaimTypes.Email)?.Value;
+
+            var getMails = await _context.Mail.Where(a => a.Status == "n").ToListAsync();
+            
+            foreach(var mail in getMails)
+            {
+                await _emailsv.SendEmailAsync(mail, fromAddress, smtpPassword);
+
+                mail.Status = "y";
+                mail.TimeSent = DateTime.Now.ToString();
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Đã gửi đi các e-mail (200)");
+        }
 
         private bool MailsExists(int id)
         {

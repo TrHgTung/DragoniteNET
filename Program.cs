@@ -1,4 +1,7 @@
+using DragoniteNET.Config;
 using DragoniteNET.DataContext;
+using DragoniteNET.Interface;
+using DragoniteNET.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -9,6 +12,9 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection("SmtpSettings"));
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var MyAllowSpecificOrigins = "AllowAllOrigins";
 builder.Services.AddCors(options =>
