@@ -132,6 +132,7 @@ namespace DragoniteNET.Controllers
         //    return NoContent();
         //}
         
+        // khi click Ẩn thư, thi se update status cua mail la "i" => ko hien thi len giao dien chinh
         [HttpPatch("{id}")]
         [Authorize]
         public async Task<IActionResult> RemoveMail(int id/*, [FromBody] JsonPatchDocument<MailPatchDto> mailPatch*/)
