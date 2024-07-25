@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using DragoniteNET.Dto;
 using DragoniteNET.Interface;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace DragoniteNET.Controllers
 {
@@ -54,7 +55,7 @@ namespace DragoniteNET.Controllers
         // POST api/Mail        
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult<Mails>> SaveMail([FromForm]  MailDto mailDto)
+        public async Task<IActionResult> SaveMail([FromForm]  MailDto mailDto)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value; // lay gia tri UserId tu Claim
             var userEmail = User.Claims.FirstOrDefault(d => d.Type == ClaimTypes.Email)?.Value; // lay gia tri email tu Claim
@@ -72,15 +73,24 @@ namespace DragoniteNET.Controllers
                 TimeSent = DateTime.Now.ToString("d/m/yyyy"),
             };
 
+            var suggestion = new Suggestions
+            {
+                Content = mailDto.MailContent,
+                Rating = 1
+            };
+
             _context.Mail.Add(mail);
+            _context.Suggestion.Add(suggestion);
+
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMail", new { id = mail.Id }, mail);
+            //return CreatedAtAction("GetMail", new { id = mail.Id }, mail);
 
-            //return Ok(new
-            //{
-            //    User_Email = userEmail,
-            //});
+            return Ok(new
+            {
+                Mail = mail,
+                Suggestion = suggestion,
+            });
         }
 
         [Authorize]
@@ -103,6 +113,68 @@ namespace DragoniteNET.Controllers
             await _context.SaveChangesAsync();
 
             return Ok("Đã gửi đi các e-mail (200)");
+        }
+
+        //[HttpDelete("{id}")]
+        //[Authorize]
+        //public async Task<IActionResult> RemoveMail(int id)
+        //{
+        //    var getMail = await _context.Mail.FindAsync(id);
+
+        //    if (getMail == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Mail.Remove(getMail);
+        //    await _context.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
+        
+        [HttpPatch("{id}")]
+        [Authorize]
+        public async Task<IActionResult> RemoveMail(int id/*, [FromBody] JsonPatchDocument<MailPatchDto> mailPatch*/)
+        {
+            //if(mailPatch == null)
+            //{
+            //    return BadRequest();
+            //}
+
+            var getMail = await _context.Mail.FindAsync(id);
+
+            if(getMail == null)
+            {
+                return NotFound();
+            }
+
+            getMail.Status = "i";
+
+            //var statusUpdate = new MailPatchDto
+            //{
+            //    Status = getMail.Status
+            //};
+
+            //mailPatch.ApplyTo(statusUpdate);
+
+            //if (!TryValidateModel(statusUpdate))
+            //{
+            //    return ValidationProblem(ModelState);
+            //}
+
+            //getMail.Status = statusUpdate.Status;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!_context.Mail.Any(e => e.Id == id))
+            {
+                return NotFound();
+            }
+
+
+            return NoContent();
         }
 
         private bool MailsExists(int id)
