@@ -45,10 +45,19 @@ namespace DragoniteNET.Controllers
                         .Where(m => m.UserId == userId)
                         .Where(m => m.Status == "n")
                         .ToListAsync();
+            
+            var getSentMails_HistoryMail = await _context.Mail
+                        .Where(m => m.UserId == userId)
+                        .Where(m => m.Status == "y")
+                        .ToListAsync();
+
+            var historyMailCount = getSentMails_HistoryMail.Count();
 
             return Ok(new { 
                 UserId = userId,
-                Mails = getMails,
+                data = getMails,
+                all_mails_sent = getSentMails_HistoryMail,
+                the_number_of_mail_sent = historyMailCount,
             });
         }
 
@@ -128,32 +137,13 @@ namespace DragoniteNET.Controllers
             return Ok("Đã gửi đi các e-mail (200)");
         }
 
-        //[HttpDelete("{id}")]
-        //[Authorize]
-        //public async Task<IActionResult> RemoveMail(int id)
-        //{
-        //    var getMail = await _context.Mail.FindAsync(id);
-
-        //    if (getMail == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Mail.Remove(getMail);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-        
+    
         // khi click Ẩn thư, thi se update status cua mail la "i" => ko hien thi len giao dien chinh
         [HttpPatch("{id}")]
         [Authorize]
         public async Task<IActionResult> RemoveMail(int id/*, [FromBody] JsonPatchDocument<MailPatchDto> mailPatch*/)
         {
-            //if(mailPatch == null)
-            //{
-            //    return BadRequest();
-            //}
+        
 
             var getMail = await _context.Mail.FindAsync(id);
 
@@ -162,21 +152,9 @@ namespace DragoniteNET.Controllers
                 return NotFound();
             }
 
-            getMail.Status = "i";
+            //getMail.Status = "i";
+            getMail.Status = "y"; // cho front end nhan du lieu
 
-            //var statusUpdate = new MailPatchDto
-            //{
-            //    Status = getMail.Status
-            //};
-
-            //mailPatch.ApplyTo(statusUpdate);
-
-            //if (!TryValidateModel(statusUpdate))
-            //{
-            //    return ValidationProblem(ModelState);
-            //}
-
-            //getMail.Status = statusUpdate.Status;
 
             try
             {

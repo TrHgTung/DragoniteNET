@@ -8,6 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using NuGet.Protocol;
 
 namespace DragoniteNET.Controllers
 {
@@ -38,6 +40,7 @@ namespace DragoniteNET.Controllers
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.UserData, user.UserId),
                 new Claim(ClaimTypes.SerialNumber, user.SMTPPassword),
+                new Claim(ClaimTypes.CookiePath, user.ToJson()),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -76,6 +79,20 @@ namespace DragoniteNET.Controllers
             await _context.SaveChangesAsync();
 
             return Ok("Đã tạo thành công tài khoản: " + request.Email);
+        }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var userData = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.CookiePath)?.Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
+
+            return Ok(new
+            {
+                user_id = userId,
+                User_information = userData
+            });
         }
 
         // POST: login
