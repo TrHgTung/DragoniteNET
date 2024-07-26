@@ -185,7 +185,7 @@
 
 <h4>Với source ReactJS (Front-end):</h4>
 
-> Mở Terminal/Command Line: trỏ tới source ReactJS với lệnh `cd frontend\my-app`
+> Mở Terminal/Command Line: tại vị trí source DragoniteNET, chạy lệnh `cd ReactJS\dragonite` (Lí do: Source front-end nằm trong source back-end .NET Core =)))
 
 1. Chạy lệnh `npm install`<br>
 2. Ứng dụng sẽ chạy trên địa chỉ http://127.0.0.1:3000
@@ -198,8 +198,8 @@
 
 <h4>Với source ReactJS (Front-end):</h4>
 
-1. Chạy lệnh `npm start`<br>
-2. Truy cập trong trình duyệt: http://127.0.0.1:3000<br><br>
+1. Chạy lần lượt các lệnh: `cd ReactJS\dragonite` -> `npm start` <br>
+2. Truy cập trong trình duyệt: http://127.0.0.1:3000 hoặc http://localhost:3000 <br><br>
 
 > <i>Fact</i>: http://127.0.0.1 chính là địa chỉ http://localhost<br>
 
