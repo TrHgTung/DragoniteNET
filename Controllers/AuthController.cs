@@ -75,7 +75,7 @@ namespace DragoniteNET.Controllers
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok("Đã tạo thành công tài khoản" + request.Email);
+            return Ok("Đã tạo thành công tài khoản: " + request.Email);
         }
 
         // POST: login

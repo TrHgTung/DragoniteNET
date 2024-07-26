@@ -26,7 +26,19 @@ namespace DragoniteNET.Services
             // Add attachment if exists
             if (!string.IsNullOrEmpty(mail.Attachment))
             {
-                builder.Attachments.Add(mail.Attachment);
+                var attach = builder.Attachments.Add(mail.Attachment);
+
+                string dauGachChan = "__";
+
+                int index = mail.Attachment.IndexOf(dauGachChan);
+
+                if (index != -1)
+                {
+                    var newFileName = mail.Attachment.Substring(index + dauGachChan.Length);
+                    attach.ContentDisposition.FileName = newFileName;
+                    attach.ContentType.Name = newFileName;
+                }
+                
             }
 
             email.Body = builder.ToMessageBody();

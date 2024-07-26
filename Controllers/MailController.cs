@@ -64,7 +64,7 @@ namespace DragoniteNET.Controllers
             string attachmentPath = null;
             if(mailDto.Attachment != null)
             {
-                var attachmentFullName = Path.GetRandomFileName() + "__" + Path.GetFileName(mailDto.Attachment.FileName) + Path.GetExtension(mailDto.Attachment.FileName);
+                var attachmentFullName = Path.GetRandomFileName() + "__" + Path.GetFileNameWithoutExtension(mailDto.Attachment.FileName) + Path.GetExtension(mailDto.Attachment.FileName);
                 attachmentPath = Path.Combine("FileStorage", attachmentFullName);
 
                 using (var stream = new FileStream(attachmentPath, FileMode.Create))
