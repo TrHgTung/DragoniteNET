@@ -10,6 +10,6 @@ namespace DragoniteNET.Dto
         public string MailSubject { get; set; }
         [Required]
         public string MailContent { get; set; }
-        public string? Attachment { get; set; }
+        public IFormFile? Attachment { get; set; }
     }
 }

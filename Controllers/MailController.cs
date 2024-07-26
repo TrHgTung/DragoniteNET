@@ -60,6 +60,19 @@ namespace DragoniteNET.Controllers
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value; // lay gia tri UserId tu Claim
             var userEmail = User.Claims.FirstOrDefault(d => d.Type == ClaimTypes.Email)?.Value; // lay gia tri email tu Claim
             var rand = new Random();
+
+            string attachmentPath = null;
+            if(mailDto.Attachment != null)
+            {
+                var attachmentFullName = Path.GetRandomFileName() + "__" + Path.GetFileName(mailDto.Attachment.FileName) + Path.GetExtension(mailDto.Attachment.FileName);
+                attachmentPath = Path.Combine("FileStorage", attachmentFullName);
+
+                using (var stream = new FileStream(attachmentPath, FileMode.Create))
+                {
+                    await mailDto.Attachment.CopyToAsync(stream);
+                }
+            }
+
             var mail = new Mails
             {
                 MailId = "MAIL_" + rand.Next(11111, 99999),
@@ -68,7 +81,7 @@ namespace DragoniteNET.Controllers
                 ToAddress = mailDto.ToAddress,
                 MailSubject = mailDto.MailSubject,
                 MailContent = mailDto.MailContent,
-                Attachment = mailDto.Attachment,
+                Attachment = attachmentPath,
                 Status = "n",
                 TimeSent = DateTime.Now.ToString("d/m/yyyy"),
             };
