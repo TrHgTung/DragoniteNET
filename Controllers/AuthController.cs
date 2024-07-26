@@ -107,7 +107,16 @@ namespace DragoniteNET.Controllers
 
             var token = CreateToken(user);
 
-            return Ok(new { token });
+            var displayName = user.DisplayName;
+            var getSmtpPassword = user.SMTPPassword;
+
+            return Ok(new
+            {
+                token = token,
+                SMTP_pswrd = getSmtpPassword,
+                user = user,
+                display_name = displayName
+            });
         }
     }
 }

@@ -24,9 +24,10 @@ namespace DragoniteNET.Controllers
 
         // GET: api/Suggestions
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Suggestions>>> GetSuggestion()
         {
-            var getOriginSuggestion = await _context.Suggestion.OrderBy(a => a.Rating).Distinct().ToListAsync();
+            var getOriginSuggestion = await _context.Suggestion.OrderByDescending(a => a.Rating).Distinct().ToListAsync();
             List<Suggestions> res = new List<Suggestions>();
 
             foreach(var item in getOriginSuggestion)
@@ -83,7 +84,7 @@ namespace DragoniteNET.Controllers
 
             return Ok(new
             {
-                Suggestions = finalSuggestions
+                Suggestions = finalSuggestions.OrderByDescending(a => a.Rating)
             });
         }
 
