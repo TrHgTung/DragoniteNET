@@ -1,15 +1,16 @@
 ﻿<h1>Dragonite - Một ứng dụng gửi thư điện tử đồng loạt với .NET Core và ReactJS</h1>
 <h2>GIỚI THIỆU</h2>
 
-<h6>Phiên bản: 1.0 - Giấy phép MIT</h6>
+<h6>Phiên bản: 1.0 - MIT License</h6>
 <p>Một hệ thống nhằm lưu trữ nhiều nội dung thư điện tử theo danh sách và cho phép gửi đi đồng loạt </p>
 
 - Tác quyền: <br>
 
-  - Hình ảnh & thương hiệu (Pokémon): The Pokémon Company / Game Freak / Nintendo (1996) <br>
+  - Hình ảnh (Pokémon): The Pokémon Company / Game Freak / Nintendo (1996) <br>
 
   - Thiết kế ứng dụng & viết mã: Hoàng Tùng <br>
-  - Kịch bản & thiết kế tệp README / tài liệu hướng dẫn: Hoàng Tùng <br><br>
+  - Kịch bản & thiết kế tệp README / tài liệu hướng dẫn: Hoàng Tùng <br>
+  - Website: https://hoang-tung-site.vercel.app/ <br><br>
 
 <img src="./Readme/manhinh/GioiThieu.png">
 
@@ -197,7 +198,9 @@
 
 <h4>Với source .NET (Back-end):</h4>
 
-- Mở source với Visual Studio -> Start without debugging (chạy bằng dịch vụ IIS Express Server / http)
+- Mở source với Visual Studio -> Start without debugging (chạy bằng http - hoặc các bạn có thể chạy bằng IIS / Docker / ...) <br>
+- Hoặc: Mở command line ngay tại vị trí thư mục chứa source .NET, chạy lệnh `dotnet run` <br>
+  (Nhớ kiểm tra đã kết nối/hiệu lực SQL Server hay chưa) <br>
 
 <h4>Với source ReactJS (Front-end):</h4>
 
