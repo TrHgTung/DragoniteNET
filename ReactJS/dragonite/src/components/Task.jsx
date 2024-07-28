@@ -90,21 +90,18 @@ const Task = () => {
     const sendMailFunction = async (e) => { // sendAll MAils
         e.preventDefault();
         try {
-            // const email = localStorage.getItem('email');
-            // const smtp = localStorage.getItem('SMTP_password');
+            const email = localStorage.getItem('email');
+            const smtp = localStorage.getItem('SMTP_password');
          
-            // const sendData = {
-            //     Email: email,
-            //     Smtp: smtp 
-            // };
-            const response = await axios.post(`${SERVER_API}${API_ENDPOINT}/Mail/send`,
+            const sendData = {
+                email: email,
+                smtp: smtp 
+            };
+            const response = await axios.post(`${SERVER_API}${API_ENDPOINT}/Mail/send`, 
+                sendData,
                 {
                     headers: {
-                        //'Content-Type': 'text/plain',
                         'Content-Type': 'application/json',
-                        'Charset':'utf-8',
-                        'Access-Control-Allow-Origin': '*',
-                        'supports_credentials' : true,
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     }
                 },

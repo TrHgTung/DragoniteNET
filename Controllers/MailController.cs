@@ -115,26 +115,41 @@ namespace DragoniteNET.Controllers
             });
         }
 
-        [Authorize]
+        
         [HttpPost("send")]
-        public async Task<IActionResult> SendMails()
+        [Authorize]
+        public async Task<IActionResult> SendMails([FromBody] SendMailRequest data)
         {
-            var smtpPassword = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber)?.Value; // lay gia tri UserId tu Claim
+            string email = data.Email;
+            string smtp = data.Smtp;
+
+            var smtpPassword = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber)?.Value; // lay tu Claim
             var fromAddress = User.Claims.FirstOrDefault(d => d.Type == ClaimTypes.Email)?.Value;
 
-            var getMails = await _context.Mail.Where(a => a.Status == "n").ToListAsync();
-            
-            foreach(var mail in getMails)
+            if (email != fromAddress || smtp != smtpPassword)
             {
-                await _emailsv.SendEmailAsync(mail, fromAddress, smtpPassword);
-
-                mail.Status = "y";
-                mail.TimeSent = DateTime.Now.ToString();
+                return Unauthorized("Xác thực không đúng.");
             }
 
-            await _context.SaveChangesAsync();
+            var getMails = await _context.Mail.Where(a => a.Status == "n").ToListAsync();
+            try
+            {
+                foreach (var mail in getMails)
+                {
+                    await _emailsv.SendEmailAsync(mail, fromAddress, smtpPassword);
 
-            return Ok("Đã gửi đi các e-mail (200)");
+                    mail.Status = "y";
+                    mail.TimeSent = DateTime.Now.ToString();
+                }
+
+                await _context.SaveChangesAsync();
+
+                return Ok(new { success = true, message = "Đã gửi đi các e-mail" });
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, $"Đã có lỗi xảy ra: {e.Message}");
+            }
         }
 
     
