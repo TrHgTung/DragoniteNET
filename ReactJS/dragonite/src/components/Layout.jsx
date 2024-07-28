@@ -41,10 +41,8 @@ const Layout = ()  => {
 
   const handleChange = (e) => {
     const { name, files, value } = e.target;
-    //const data = editor.getData();
     setFormData({
         ...formData,
-        //data,
         [name]: files ? files[0] : value
     });
   };

@@ -110,10 +110,8 @@ const Suggest = () => {
                     }
                 });
                 
-                //setDeadline(response.data.result);
                 setData(response.data.suggestions);
 
-                // console.log("Check Deadline: " + checkDeadline.character_name)              
         }
         catch (error) {
                 console.error('Error fetching data:', error);
@@ -158,7 +156,6 @@ const Suggest = () => {
         });
 
         try {
-            // await axios.get(`${SERVER_API}/sanctum/csrf-cookie`, { withCredentials: true });
             const response = await axios.patch(`${SERVER_API}${API_ENDPOINT}/Suggestions/${id}`, 
                 null, {
                 headers: {
@@ -179,9 +176,6 @@ const Suggest = () => {
         }
     }
 
-    // useEffect(() => {
-        
-    //   }, []);
 
     return (
       <div className='container mt-4'>
@@ -194,7 +188,6 @@ const Suggest = () => {
                 <i>Hãy sao chép một trong những gợi ý nội dung e-mail phía dưới. Chúng có thể giúp bạn hoàn thiện e-mail tốt hơn</i>
             </div>
         </div>
-        {/* làm tới đây rồi */}
         <table className="table table-striped">
             <thead>
                 <tr>
@@ -233,9 +226,7 @@ const Suggest = () => {
             </tbody>
         </table>
         <div>
-            {/* <p>{pokemon}</p> */}
-            {/* <img src="/pokemon/" alt="" src={`/assets/assistant_zone/${pokemonName[index].character_name}_${isShiny[index].is_shiny}.png`} width="360px" height="360px" alt={`${pokemonName[index].character_name}`}/> */}
-            <img src={`/pokemon/${pokemon}.png`}  alt={`${pokemon}`} title={`Xin chào, ${pokemon} hi vọng bạn tìm được thứ mình cần`} onClick={sayMessage} />
+            <img src={`/pokemon/${pokemon}.png`}  alt={`${pokemon}`} title={`Xin chào, ${pokemon} hi vọng bạn tìm được nội dung mình cần`} onClick={sayMessage} />
         </div>
       </div>
     )

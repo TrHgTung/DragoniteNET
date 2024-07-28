@@ -19,11 +19,9 @@ const Register = () => {
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        // setSelectOption(e.target.value);
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            // [e.target.name]: e.target.value
             [name]: value
         });
     };
@@ -43,7 +41,6 @@ const Register = () => {
         console.log('Data being sent:', formData.Password);
 
         try{
-            //await axios.get('http://127.0.0.1:4401/sanctum/csrf-cookie', { withCredentials: true });
             const response = await axios.post(`${SERVER_API}/register`, {
                 DisplayName: formData.DisplayName,
                 Email: formData.Email,
@@ -70,10 +67,6 @@ const Register = () => {
         }
     };
 
-    // const [selectOption, setSelectOption] = useState('0');
-    // const handleSelectOptionChange = (e) => {
-    //     setSelectOption(e.target.value);
-    // }
 
   return (
     <div className="container">

@@ -2,7 +2,6 @@ import React, { Component, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link, useNavigate  } from 'react-router-dom';
 import { useAuth } from '../supports/AuthProvider';
-// import bg from './inline-img/bg/0.PNG';
 import { toast } from 'react-toastify';
 import host from '../config/host.json';
 
@@ -14,7 +13,6 @@ const Login = () => {
     const [Email, setEmail] = useState('');
     const [Password, setPassword] = useState('');
     const [error, setError] = useState('');
-    //const [assist, setAssist] = useState('');
     const { login } = useAuth();
     const navigate = useNavigate();
     
