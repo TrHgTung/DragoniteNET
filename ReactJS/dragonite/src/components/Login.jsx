@@ -50,8 +50,8 @@ const Login = () => {
                 localStorage.setItem('SMTP_password', response.data.user.smtpPassword);
                 navigate('/');
             } else {
-                console.log('Đăng nhập thất bại (no token found');
-                toast.error('Đăng nhập thất bại 401.', {
+                console.log('Không khởi tạo được token');
+                toast.error('Không khởi tạo được token.', {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -64,7 +64,7 @@ const Login = () => {
             
         }
         catch (error) {
-            toast.error('Đăng nhập thất bại 404.', {
+            toast.error('Sai thông tin đăng nhập.', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,

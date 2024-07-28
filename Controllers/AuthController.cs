@@ -10,6 +10,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using NuGet.Protocol;
+using Newtonsoft.Json;
 
 namespace DragoniteNET.Controllers
 {
@@ -63,6 +64,16 @@ namespace DragoniteNET.Controllers
             {
                 return BadRequest("Email này đã được sử dụng");
             }
+
+            if (string.IsNullOrEmpty(request.Password))
+            {
+                return BadRequest(new
+                {
+                    request = (request),
+                    message = "Password không được để trống."
+                });
+            }
+            
             var rand = new Random();
             var initUserId = rand.Next(11111, 99999);
 
@@ -78,7 +89,11 @@ namespace DragoniteNET.Controllers
             _context.User.Add(user);
             await _context.SaveChangesAsync();
 
-            return Ok("Đã tạo thành công tài khoản: " + request.Email);
+            return Ok(new
+            {
+                success = true,
+                message = "Đã tạo thành công tài khoản: " + request.Email
+            });
         }
 
         [HttpGet("profile")]

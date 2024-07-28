@@ -1,7 +1,7 @@
 ﻿<h1>Dragonite - Một ứng dụng gửi thư điện tử đồng loạt với .NET Core và ReactJS</h1>
 <h2>GIỚI THIỆU</h2>
 
-<h6>Phiên bản: Beta - Giấy phép MIT License</h6>
+<h6>Phiên bản: 1.0 - Giấy phép MIT</h6>
 <p>Một hệ thống nhằm lưu trữ nhiều nội dung thư điện tử theo danh sách và cho phép gửi đi đồng loạt </p>
 
 - Tác quyền: <br>
@@ -23,9 +23,12 @@
 <h2>CÁC CÔNG NGHỆ NỔI BẬT</h2>
 
 1. <b> .NET Core </b>: <br>
+
 - Tài liệu: https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-web-api?view=aspnetcore-8.0&tabs=visual-studio <br>
 - Tham khảo: ChatGPT (https://chat.openai.com/), StackOverFlow (https://stackoverflow.com/) <br><br>
+
 2. <b> ReactJS</b>: <br>
+
 - Tài liệu: https://react.dev/learn <br>
 - Trang chủ: https://react.dev/ <br>
 - Tham khảo: ChatGPT (https://chat.openai.com/), StackOverFlow (https://stackoverflow.com/)<br><br>
@@ -45,7 +48,7 @@
 
 - Tương tự <a href="https://github.com/TrHgTung/Dragonite">https://github.com/TrHgTung/Dragonite</a>
 
-   > Kỹ thuật SMTP: dùng MailKit.
+  > Kỹ thuật SMTP: dùng MailKit.
 
 - Tương tự <a href="https://github.com/TrHgTung/Dragonite">https://github.com/TrHgTung/Dragonite</a>
 
@@ -179,9 +182,9 @@
 
 - Trong SQL Server Management Studio: Khởi động và đăng nhập vào SQL Server -> Tạo một cơ sở dữ liệu mới, đặt tên tùy ý <br>
 - Trong Visual Studio: <br>
-	+ Mở source với Visual Studio -> Build -> Build Solution <br>
-	+ Cấu hình trong file appsettings.json: Kết nối với SQL Server bằng câu lệnh ConnectionString (https://learn.microsoft.com/vi-vn/ef/core/miscellaneous/connection-strings) <br>
-	+ Thực hiện migration: Tools -> NuGet Package Manager -> Package Manager Console -> Chạy lệnh `dotnet ef database update`. <br>
+  - Mở source với Visual Studio -> Build -> Build Solution <br>
+  - Cấu hình trong file appsettings.json: Kết nối với SQL Server bằng câu lệnh ConnectionString (https://learn.microsoft.com/vi-vn/ef/core/miscellaneous/connection-strings) <br>
+  - Thực hiện migration: Tools -> NuGet Package Manager -> Package Manager Console -> Chạy lệnh `dotnet ef database update`. <br>
 
 <h4>Với source ReactJS (Front-end):</h4>
 

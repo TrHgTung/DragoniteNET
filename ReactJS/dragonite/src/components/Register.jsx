@@ -9,38 +9,53 @@ const {API_ENDPOINT} = host;
 
 const Register = () => {
     const [formData, setFormData] = useState({
-        display_name: '',
-        email: '',
-        password: '', 
+        DisplayName: '',
+        Email: '',
+        Password: '', 
         confirm_password: '', 
-        smtp_password: '', // for send mail
+        SMTPPassword: '', // for send mail
     });
     const [selectOption, setSelectOption] = useState('0');
     const navigate = useNavigate();
 
     const handleChange = (e) => {
-        setSelectOption(e.target.value);
+        // setSelectOption(e.target.value);
+        const { name, value } = e.target;
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
+            // [e.target.name]: e.target.value
+            [name]: value
         });
     };
 
     const handleRegister = async (e) => { // kiem tra xac nhan password
         e.preventDefault();
-        if(formData.password != formData.confirm_password){
+        if(formData.Password != formData.confirm_password){
             toast.error('Mật khẩu nhập lại không chính xác');
             return;
         }
 
+        if (!formData.DisplayName || !formData.Email || !formData.Password || !formData.SMTPPassword) {
+            toast.error('Vui lòng điền đầy đủ các thông tin.');
+            return;
+        }
+
+        console.log('Data being sent:', formData.Password);
+
         try{
             //await axios.get('http://127.0.0.1:4401/sanctum/csrf-cookie', { withCredentials: true });
-            const response = await axios.post(`${SERVER_API}${API_ENDPOINT}/register`, {
-                display_name: formData.display_name,
-                email: formData.email,
-                password: formData.password,
-                smtp_password: formData.smtp_password,
-            },  { withCredentials: true });
+            const response = await axios.post(`${SERVER_API}/register`, {
+                DisplayName: formData.DisplayName,
+                Email: formData.Email,
+                Password: formData.Password,
+                SMTPPassword: formData.SMTPPassword,
+            },
+            {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            }
+            ,  { withCredentials: true });
 
             if(response.data.success){
                 toast.success('Đăng ký thành công. Hãy đăng nhập bằng tài khoản của bạn');
@@ -74,37 +89,37 @@ const Register = () => {
                         <h2 className='w-100 d-flex justify-content-center p-3 mt-3'>Đăng ký sử dụng</h2>
                         <p className='text-center'><i>Một lần đăng ký cho tất cả các phiên đăng nhập</i></p>
                         <div className="form-floating mt-4">
-                            <label htmlFor='display_name'>Tên hiển thị:</label>
+                            <label htmlFor='DisplayName'>Tên hiển thị:</label>
                             <input 
                                 type="text" 
                                 className="form-control" 
-                                id="display_name" 
-                                name="display_name" 
-                                value={formData.display_name} 
+                                id="DisplayName" 
+                                name="DisplayName" 
+                                value={formData.DisplayName} 
                                 onChange={handleChange} 
                                 required 
                             />
                         </div>
                         <div className="form-floating mt-4">
-                            <label htmlFor='email'>E-mail:</label>
+                            <label htmlFor='Email'>E-mail:</label>
                             <input 
-                                type="email" 
+                                type="Email" 
                                 className="form-control" 
-                                id="email" 
-                                name="email" 
-                                value={formData.email} 
+                                id="Email" 
+                                name="Email" 
+                                value={formData.Email} 
                                 onChange={handleChange} 
                                 required 
                             />
                         </div>
                         <div className="form-floating mt-4">
-                            <label htmlFor='password'>Mật khẩu:</label>
+                            <label htmlFor='Password'>Mật khẩu:</label>
                             <input 
                                 type="password" 
                                 className="form-control" 
-                                id="password" 
-                                name="password" 
-                                value={formData.password} 
+                                id="Password" 
+                                name="Password" 
+                                value={formData.Password} 
                                 onChange={handleChange} 
                                 required 
                             />
@@ -122,13 +137,13 @@ const Register = () => {
                             />
                         </div>
                         <div className="form-floating mt-4 mb-4">
-                            <label htmlFor='confirm_password'>Nhập mật khẩu SMTP*:</label>
+                            <label htmlFor='SMTPPassword'>Nhập mật khẩu SMTP*:</label>
                             <input 
                                 type="text" 
                                 className="form-control" 
-                                id="smtp_password" 
-                                name="smtp_password" 
-                                value={formData.smtp_password} 
+                                id="SMTPPassword" 
+                                name="SMTPPassword" 
+                                value={formData.SMTPPassword} 
                                 onChange={handleChange} 
                                 required 
                             />
