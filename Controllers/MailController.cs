@@ -21,12 +21,14 @@ namespace DragoniteNET.Controllers
     public class MailController : ControllerBase
     {
         private readonly DtaContext _context;
+        //private readonly PagnitionDto _pagination;
         public readonly IEmailService _emailsv;
 
-        public MailController(DtaContext context, IEmailService emailService)
+        public MailController(DtaContext context, IEmailService emailService/*, PagnitionDto pagnitionDto*/)
         {
             _context = context;
             _emailsv = emailService;
+            //_pagination = pagnitionDto;
         }
 
         // GET: api/Mail
@@ -45,19 +47,46 @@ namespace DragoniteNET.Controllers
                         .Where(m => m.UserId == userId)
                         .Where(m => m.Status == "n")
                         .ToListAsync();
-            
+          
             var getSentMails_HistoryMail = await _context.Mail
                         .Where(m => m.UserId == userId)
                         .Where(m => m.Status == "y")
+                        .OrderByDescending(m => m.TimeSent)
+                        .Take(2)
                         .ToListAsync();
 
-            var historyMailCount = getSentMails_HistoryMail.Count();
+            var historyMailCount =  _context.Mail
+                        .Where(m => m.UserId == userId)
+                        .Where(m => m.Status == "y")
+                        .ToList()
+                        .Count();
 
             return Ok(new { 
                 UserId = userId,
                 data = getMails,
                 all_mails_sent = getSentMails_HistoryMail,
-                the_number_of_mail_sent = historyMailCount,
+                the_number_of_mail_sent = historyMailCount, // Pagintion > Item Number
+            });
+        }
+
+        [HttpPost("pagination")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<Mails>>> Pagination([FromBody] PagnitionDto pagnitionDto)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value; // lay gia tri UserId tu Claim
+            int pageSize = (int)(Math.Floor(pagnitionDto.ItemNumber / 5.0));
+            int pageIndex = (pagnitionDto.PageIndex);
+
+            var getSentMails = await _context.Mail
+                        .Where(m => m.UserId == userId)
+                        .Where(m => m.Status == "y")
+                        .Skip((pageIndex - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToListAsync();
+
+            return Ok(new
+            {
+                sent_mails_by_pageIndex = getSentMails
             });
         }
 
@@ -92,7 +121,7 @@ namespace DragoniteNET.Controllers
                 MailContent = mailDto.MailContent,
                 Attachment = attachmentPath,
                 Status = "n",
-                TimeSent = DateTime.Now.ToString("d/m/yyyy"),
+                TimeSent = DateTime.UtcNow.ToShortTimeString(),
             };
 
             var suggestion = new Suggestions
@@ -139,7 +168,7 @@ namespace DragoniteNET.Controllers
                     await _emailsv.SendEmailAsync(mail, fromAddress, smtpPassword);
 
                     mail.Status = "y";
-                    mail.TimeSent = DateTime.Now.ToString();
+                    mail.TimeSent = DateTime.UtcNow.ToShortTimeString();
                 }
 
                 await _context.SaveChangesAsync();

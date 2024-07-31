@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../supports/AuthProvider';
 import host from '../config/host.json';
 import pokemon_color from '../config/pokemon-color.json';
+import { toast } from 'react-toastify';
 
 const {SERVER_API} = host;
 const {API_ENDPOINT} = host;
@@ -22,6 +23,10 @@ const {Lucario} = pokemon_color;
 const Task = () => {
     const [data, setData] = useState('');
     const [serviceName, setServiceName] = useState('');
+    const [dataItem, setDataItem] = useState('');
+    const [PageIndex, setPageIndex] = useState('');
+    const [ItemNumber, setNumberofItem] = useState('');
+    const [newData, setNewData] = useState('');
     const { auth } = useAuth();
     const navigate = useNavigate();
     let stt = 1;
@@ -30,7 +35,6 @@ const Task = () => {
 
     const [sendData, setSendData] = useState({
         email: '',
-        //assistant: '',
         deadline: ''
     });
 
@@ -46,10 +50,11 @@ const Task = () => {
                 //fetch api
                 const response = await axios.get(`${SERVER_API}${API_ENDPOINT}/Mail`, {
                     headers: {
-                        Authorization: `Bearer ${auth.token}`
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
                     }
                 });
-                
+
+                setDataItem(Math.floor(response.data.the_number_of_mail_sent / 5));
                 setServiceName(domainParts[0]);
                 setData(response.data.all_mails_sent);
         }
@@ -116,7 +121,47 @@ const Task = () => {
         );
     }
 
-  
+    const handlePagination = async (item) => {
+      try{
+        const takeData = await axios.get(`${SERVER_API}${API_ENDPOINT}/Mail`,{
+          headers: { 
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type' : 'application/json'
+          }
+        });
+        setNumberofItem(takeData.data.the_number_of_mail_sent);
+        setPageIndex(item);
+      }
+      catch (error) {
+        console.log(error);
+        return;
+      }
+      
+      try{
+        const response = await axios.post(`${SERVER_API}${API_ENDPOINT}/Mail/pagination`, {
+          ItemNumber,
+          PageIndex: item
+        },{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          }
+        }, {
+          withCredentials: true 
+        });
+
+        // setDataItem(Math.floor(response.data.the_number_of_mail_sent / 5));
+        setNewData(response.data.sent_mails_by_pageIndex);
+
+        // test
+        console.log('ItemNumber = ' + ItemNumber);
+        console.log('PageIndex = ' + item); 
+        console.log('Data item = ' + dataItem);  // failed
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
    
     return (
       <div className='container mt-4'>
@@ -134,7 +179,8 @@ const Task = () => {
         <table className="table table-striped">
             <thead>
                 <tr>
-                    <th scope="col">STT | Mail ID</th>
+                    <th scope="col">STT</th>
+                    <th scope="col">Mail ID</th>
                     <th scope="col">Tiêu đề thư</th>
                     <th scope="col">Nội dung thư</th>
                     <th scope="col">Đính kèm tệp</th>
@@ -142,15 +188,34 @@ const Task = () => {
                 </tr>
             </thead>
             <tbody>
-                {(data.length === 0) ? (
+                {(data.length !== 0 && newData.length === 0) ? ( // mac dinh (vua tai trang)
+                    data.map((mails) => (
+                      (<>
+                          <tr key={mails.id}>
+                              <td>{stt++}</td>
+                              <td>{mails.mailId}</td>
+                              <td>{mails.mailSubject}</td>
+                              <td>{mails.mailContent}</td>
+                              <td>{mails.attachment == null && <p>Không có</p>}
+                                  {mails.attachment != '' && mails.attachment}</td>
+                              <td>{mails.toAddress}</td>
+                          </tr>
+                        </>
+                        
+                      )
+                  )
+              )
+                ) : (data.length === 0 && newData.length === 0) ? (  // khong cos data
+                    
                     <tr>
-                        <td colSpan="7" className="text-center">Không có thư khả dụng</td>
+                          <td colSpan="7" className="text-center">Không có dữ liệu cần thiết</td>
                     </tr>
                 ) : (
-                        data.map((mails) => (
+                        newData.map((mails) => (
                             (
                                 <tr key={mails.id}>
-                                    <td>{stt++} | {mails.mailId}</td>
+                                    <td>{stt++}</td>
+                                    <td>{mails.mailId}</td>
                                     <td>{mails.mailSubject}</td>
                                     <td>{mails.mailContent}</td>
                                     <td>{mails.attachment == null && <p>Không có</p>}
@@ -162,6 +227,41 @@ const Task = () => {
                     ))}
             </tbody>
         </table>
+        <div className='text-center mb-3 mt-2'> 
+          <i>Đang hiển thị 2 dữ liệu mới nhất. Bấm vào từng nút Phân trang để xem chi tiết hơn</i>
+        </div>
+        <div className='text-center'>
+          <div>
+            <strong>Phân trang: </strong>
+          </div>
+          <div className='mt-2'>
+            
+              {(() => {
+                const arrayIndex = [];
+
+                for(let item = 1; item <= dataItem; item++){
+                  arrayIndex.push(<button key={item} onClick={() => handlePagination(item)} className='btn btn btn-secondary ms-3'>{item}</button>);
+                }
+
+                return arrayIndex;
+              })()}
+              {/* {(dataItem === 0) ? (
+                   <></>
+                ) : (
+                  
+                    () => {
+                      const arrayIndex = [];
+      
+                      for(let i = 0; i <= dataItem; i++){
+                        arrayIndex.push(<button onClick={() => handlePagination(Number(i))} className='btn btn btn-secondary ms-3'>{i}</button>);
+                      }
+      
+                      return arrayIndex;
+                    }
+                        
+                    )()} */}
+          </div>
+        </div>
       </div>
     )
   }

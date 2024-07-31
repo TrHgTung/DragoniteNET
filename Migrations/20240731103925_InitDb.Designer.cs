@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DragoniteNET.Migrations
 {
     [DbContext(typeof(DtaContext))]
-    [Migration("20240723201708_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240731103925_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,7 +33,6 @@ namespace DragoniteNET.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Attachment")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FromAddress")
@@ -61,6 +60,10 @@ namespace DragoniteNET.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ToAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

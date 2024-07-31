@@ -30,7 +30,6 @@ namespace DragoniteNET.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Attachment")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FromAddress")
@@ -58,6 +57,10 @@ namespace DragoniteNET.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ToAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
