@@ -91,14 +91,8 @@ const Layout = ()  => {
               draggable: true,
             });
         } else {
-            // setFormData({
-            //   subject: '',
-            //   content: '',
-            //   attachment: '',
-            //   to: ''
-            // });
-            
-            toast.warning('Hãy tải lại trang', {
+           
+            toast.success('Thêm thư thành công! Hãy tải lại trang', {
               position: "top-right",
               autoClose: 5000,
               hideProgressBar: false,
@@ -107,10 +101,9 @@ const Layout = ()  => {
               draggable: true,
               progress: undefined,
             });
-            // console.error('Failed to add task:', response.data.message);
         }
     } catch (error) {
-        toast.warning('Thư (không có tệp). Hãy tải lại trang.', {
+        toast.warning('Có lỗi xảy ra (Biểu mẫu chưa được cung cấp đủ thông tin hoặc lỗi 429 giới hạn truy cập).', {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -118,7 +111,6 @@ const Layout = ()  => {
           pauseOnHover: true,
           draggable: true,
         });
-        // console.error('Error adding task:', error);
     }
   };
 
@@ -132,16 +124,6 @@ const Layout = ()  => {
   }
 
   const assist_id_main = localStorage.getItem('assistant');
-  // const [username, setUsername] = useState('');
-
-  // useEffect(() => {
-  //   if(originUsername) {
-  //     const parts = originUsername.split('@'); // Tách email thành mảng gồm phần trước và sau dấu @
-  //     if (parts.length > 0) {
-  //         setUsername(parts[0]); // Lấy phần tử đầu tiên là phần trước dấu @
-  //     }
-  //   }
-  // }, [originUsername]);
 
   const navigate = useNavigate();
  
@@ -249,6 +231,7 @@ const Layout = ()  => {
         <div className="row">
             <div className="col-md-4">
                 <h5>Thêm nội dung thư của bạn</h5>
+                <small><i>Note: Tệp đính kèm (file attachment) là không cần thiết</i></small>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3 mt-3">
                         <label htmlFor='MailSubject' className="form-label">Tiêu đề thư (e-mail subject):</label>

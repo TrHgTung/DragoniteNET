@@ -1,13 +1,17 @@
+//using AspNetCoreRateLimit;
 using DragoniteNET.Config;
 using DragoniteNET.DataContext;
 using DragoniteNET.Interface;
 using DragoniteNET.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +26,6 @@ builder.Services.AddCors(options =>
     options.AddPolicy(MyAllowSpecificOrigins,
                       builder =>
                       {
-                          //policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
                           builder.WithOrigins("http://localhost:3000", "http://127.0.0.1:3000")
                                 .AllowAnyMethod()
                                 .AllowAnyHeader()
@@ -30,14 +33,16 @@ builder.Services.AddCors(options =>
                       });
 });
 
+
 builder.Services.AddControllers();
+
 builder.Services.AddDbContext<DtaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dragonite API", Version = "Beta" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dragonite API", Version = "1.2" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -65,6 +70,30 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddRateLimiter(c =>
+{
+    c.AddPolicy("LimitedRequests", context =>
+        RateLimitPartition.GetFixedWindowLimiter(context.Request.Headers["Authorization"],
+        x =>
+        {
+            return new()
+            {
+                PermitLimit = 6, // number of requests
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            };
+        })
+    );
+    c.OnRejected = OnRejected;
+});
+
+static ValueTask OnRejected(OnRejectedContext context, CancellationToken token)
+{
+    //throw new NotImplementedException();
+    context.HttpContext.Response.StatusCode = (int)HttpStatusCode.TooManyRequests;
+
+    return ValueTask.CompletedTask;
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -91,8 +120,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
+//app.UseIpRateLimiting(); 
+//app.UseClientRateLimiting();
 app.UseHttpsRedirection();
+app.UseRateLimiter();
 app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthentication();
 app.UseAuthorization();

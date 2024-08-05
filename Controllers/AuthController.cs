@@ -40,6 +40,7 @@ namespace DragoniteNET.Controllers
                 new Claim(ClaimTypes.Name, user.DisplayName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.UserData, user.UserId),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId),
                 new Claim(ClaimTypes.SerialNumber, user.SMTPPassword),
                 new Claim(ClaimTypes.CookiePath, user.ToJson()),
             };
@@ -101,7 +102,7 @@ namespace DragoniteNET.Controllers
         public async Task<IActionResult> Profile()
         {
             var userData = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.CookiePath)?.Value;
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value;
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
             return Ok(new
             {

@@ -13,6 +13,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using DragoniteNET.Dto;
 using DragoniteNET.Interface;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace DragoniteNET.Controllers
 {
@@ -36,7 +37,7 @@ namespace DragoniteNET.Controllers
         [Authorize]
         public async Task<ActionResult<IEnumerable<Mails>>> GetMail()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value; // lay gia tri UserId tu Claim
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value; // lay gia tri UserId tu Claim
 
             if (string.IsNullOrEmpty(userId))
             {
@@ -93,9 +94,10 @@ namespace DragoniteNET.Controllers
         // POST api/Mail        
         [HttpPost]
         [Authorize]
+        [EnableRateLimiting("LimitedRequests")] // use policy
         public async Task<IActionResult> SaveMail([FromForm]  MailDto mailDto)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.UserData)?.Value; // lay gia tri UserId tu Claim
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value; // lay gia tri UserId tu Claim
             var userEmail = User.Claims.FirstOrDefault(d => d.Type == ClaimTypes.Email)?.Value; // lay gia tri email tu Claim
             var rand = new Random();
 
