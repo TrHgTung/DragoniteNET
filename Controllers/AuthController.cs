@@ -120,7 +120,7 @@ namespace DragoniteNET.Controllers
         public async Task<IActionResult> Login(UserDto.UserLoginDto request)
         {
             var user = await _context.User.SingleOrDefaultAsync(u => u.Email == request.Email); // lay ra thong tin user
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password) /*|| user.Status == 0*/)
             {
                 return Unauthorized("Thông tin đăng nhập sai");
             }

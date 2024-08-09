@@ -10,12 +10,14 @@ import { AuthProvider } from './supports/AuthProvider';
 import PrivateRoute from './supports/PrivateRoute';
 import Suggest from './components/Suggest';
 import History from './components/History';
+import VipDevelop from './components/VipDevelop';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path='/welcome' element={<Welcome />} />
+        <Route path='/vip_reg' element={<VipDevelop />} />
       </Routes>
       <AuthProvider>
         <Routes>

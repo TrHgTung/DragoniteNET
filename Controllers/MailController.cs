@@ -146,7 +146,62 @@ namespace DragoniteNET.Controllers
             });
         }
 
-        
+
+        // POST vip/post (VIP request for VIP accounts)      
+        [HttpPost("/vip/post")]
+        [Authorize]
+        [EnableRateLimiting("LimitedVipRequests")] // use policy (VIP)
+        public async Task<IActionResult> SaveVipMail([FromForm] MailDto mailDto)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value; // lay gia tri UserId tu Claim
+            var userEmail = User.Claims.FirstOrDefault(d => d.Type == ClaimTypes.Email)?.Value; // lay gia tri email tu Claim
+            var rand = new Random();
+
+            string attachmentPath = null;
+            if (mailDto.Attachment != null)
+            {
+                var attachmentFullName = Path.GetRandomFileName() + "__" + Path.GetFileNameWithoutExtension(mailDto.Attachment.FileName) + Path.GetExtension(mailDto.Attachment.FileName);
+                attachmentPath = Path.Combine("FileStorage", attachmentFullName);
+
+                using (var stream = new FileStream(attachmentPath, FileMode.Create))
+                {
+                    await mailDto.Attachment.CopyToAsync(stream);
+                }
+            }
+
+            var mail = new Mails
+            {
+                MailId = "MAIL_" + rand.Next(11111, 99999),
+                UserId = userId,
+                FromAddress = userEmail,
+                ToAddress = mailDto.ToAddress,
+                MailSubject = mailDto.MailSubject,
+                MailContent = mailDto.MailContent,
+                Attachment = attachmentPath,
+                Status = "n",
+                TimeSent = DateTime.UtcNow.ToShortTimeString(),
+            };
+
+            var suggestion = new Suggestions
+            {
+                Content = mailDto.MailContent,
+                Rating = 1
+            };
+
+            _context.Mail.Add(mail);
+            _context.Suggestion.Add(suggestion);
+
+            await _context.SaveChangesAsync();
+
+            //return CreatedAtAction("GetMail", new { id = mail.Id }, mail);
+
+            return Ok(new
+            {
+                Mail = mail,
+                Suggestion = suggestion,
+            });
+        }
+
         [HttpPost("send")]
         [Authorize]
         public async Task<IActionResult> SendMails([FromBody] SendMailRequest data)

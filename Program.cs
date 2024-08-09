@@ -78,7 +78,19 @@ builder.Services.AddRateLimiter(c =>
         {
             return new()
             {
-                PermitLimit = 6, // number of requests
+                PermitLimit = 3, // number of requests
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            };
+        })
+    );
+    c.AddPolicy("LimitedVipRequests", context =>
+        RateLimitPartition.GetFixedWindowLimiter(context.Request.Headers["Authorization"],
+        x =>
+        {
+            return new()
+            {
+                PermitLimit = 12, // number of requests (VIP accounts)
                 QueueLimit = 0,
                 Window = TimeSpan.FromMinutes(1)
             };

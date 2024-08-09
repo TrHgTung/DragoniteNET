@@ -46,6 +46,7 @@ const Login = () => {
                 localStorage.setItem('email', Email);
                 localStorage.setItem('user_id', response.data.user.userId);
                 localStorage.setItem('SMTP_password', response.data.user.smtpPassword);
+                localStorage.setItem('key_account', response.data.status);
                 navigate('/');
             } else {
                 console.log('Không khởi tạo được token');

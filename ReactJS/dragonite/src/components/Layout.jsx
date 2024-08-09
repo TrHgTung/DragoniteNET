@@ -66,7 +66,9 @@ const Layout = ()  => {
       data.append('Attachment', formData.Attachment);
     }
 
-    try {
+    const checkAccountVipOrNot = localStorage.getItem("key_account");
+    if(checkAccountVipOrNot == "1"){
+      try {
         const response = await axios.post(`${SERVER_API}${API_ENDPOINT}/Mail`, data, {
             headers: {
                 'Content-Type': `multipart/form-data`,
@@ -102,15 +104,63 @@ const Layout = ()  => {
               progress: undefined,
             });
         }
-    } catch (error) {
-        toast.warning('Có lỗi xảy ra (Biểu mẫu chưa được cung cấp đủ thông tin hoặc lỗi 429 giới hạn truy cập).', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
+      } catch (error) {
+          toast.warning('Có lỗi xảy ra (Biểu mẫu chưa được cung cấp đủ thông tin hoặc lỗi 429 giới hạn truy cập).', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+      }
+    }else { // for vip accounts
+      try {
+        const response = await axios.post(`${SERVER_API}/vip/post`, data, {
+            headers: {
+                'Content-Type': `multipart/form-data`,
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
         });
+        if (response.data.success) {
+            console.log('Task added successfully:', response.data.result);
+            // Optionally reset form after successful submission
+            setFormData({
+              MailSubject: '',
+              MailContent: '',
+              Attachment: null,
+              ToAddress: ''
+            });
+            toast.success('Thêm thư thành công! Hãy rải lại trang', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
+        } else {
+           
+            toast.success('Thêm thư thành công! Hãy tải lại trang', {
+              position: "top-right",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+            });
+        }
+      } catch (error) {
+          toast.warning('Có lỗi xảy ra (Biểu mẫu chưa được cung cấp đủ thông tin hoặc lỗi 429 giới hạn truy cập).', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          });
+      }
     }
   };
 
