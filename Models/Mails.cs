@@ -1,8 +1,11 @@
-﻿namespace DragoniteNET.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DragoniteNET.Models
 {
     public class Mails
     {
-        public int Id { get; set; }
+        [Key]
+        public Guid Id { get; set; }
         public string MailId { get; set; }
         public string UserId { get; set; }
         public string FromAddress { get; set; }

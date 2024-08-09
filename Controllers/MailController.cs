@@ -206,7 +206,7 @@ namespace DragoniteNET.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!_context.Mail.Any(e => e.Id == id))
+            catch (DbUpdateConcurrencyException) when (!_context.Mail.Any(e => e.Id.ToString() == id.ToString()))
             {
                 return NotFound();
             }
@@ -217,7 +217,7 @@ namespace DragoniteNET.Controllers
 
         private bool MailsExists(int id)
         {
-            return _context.Mail.Any(e => e.Id == id);
+            return _context.Mail.Any(e => e.Id.ToString() == id.ToString());
         }
     }
 }

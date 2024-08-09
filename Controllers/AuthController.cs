@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using NuGet.Protocol;
 using Newtonsoft.Json;
+using System.Collections.Immutable;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace DragoniteNET.Controllers
 {
@@ -43,6 +45,7 @@ namespace DragoniteNET.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.UserId),
                 new Claim(ClaimTypes.SerialNumber, user.SMTPPassword),
                 new Claim(ClaimTypes.CookiePath, user.ToJson()),
+                new Claim(ClaimTypes.Actor, user.Id.ToString()),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -84,7 +87,8 @@ namespace DragoniteNET.Controllers
                 DisplayName = request.DisplayName,
                 Email = request.Email,
                 Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                SMTPPassword = request.SMTPPassword
+                SMTPPassword = request.SMTPPassword,
+                Status = 1
             };
 
             _context.User.Add(user);
@@ -120,19 +124,82 @@ namespace DragoniteNET.Controllers
             {
                 return Unauthorized("Thông tin đăng nhập sai");
             }
+            else if (user.Status == 0)
+            {
+                return Unauthorized("Tài khoản đã bị khóa");
+            }
 
             var token = CreateToken(user);
 
             var displayName = user.DisplayName;
             var getSmtpPassword = user.SMTPPassword;
+            var getUserStatus = user.Status;
 
             return Ok(new
             {
                 token = token,
                 SMTP_pswrd = getSmtpPassword,
                 user = user,
-                display_name = displayName
+                display_name = displayName,
+                status = getUserStatus,
             });
+        }
+
+        // Dang ky VIP >> cho phep queue nhieu mails
+        [HttpPatch("vip")]
+        [Authorize]
+        public async Task<IActionResult> RegisterVip()
+        {
+            var getGuidID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Actor)?.Value;
+            var guid = new Guid(getGuidID);
+            //var getUser = await _context.User.Any(e => e.Id == guid);
+            var getUser = await _context.User.FindAsync(guid);
+
+            if (getUser == null)
+            {
+                return NotFound();
+            }
+            getUser.Status = 2;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!_context.User.Any(e => e.Id == guid))
+            { 
+                return NotFound();
+            }
+            //await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpPatch("unvip")]
+        [Authorize]
+        public async Task<IActionResult> UnVip()
+        {
+            var getGuidID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Actor)?.Value;
+            var guid = new Guid(getGuidID);
+            //var getUser = await _context.User.Any(e => e.Id == guid);
+            var getUser = await _context.User.FindAsync(guid);
+
+            if (getUser == null)
+            {
+                return NotFound();
+            }
+            getUser.Status = 1; // check status
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!_context.User.Any(e => e.Id == guid))
+            {
+                return NotFound();
+            }
+            //await _context.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }
