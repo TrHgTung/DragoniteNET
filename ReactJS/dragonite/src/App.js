@@ -10,7 +10,7 @@ import { AuthProvider } from './supports/AuthProvider';
 import PrivateRoute from './supports/PrivateRoute';
 import Suggest from './components/Suggest';
 import History from './components/History';
-import VipDevelop from './components/VipDevelop';
+import VipUpgrade from './components/VipUpgrade';
 
 function App() {
   return (
@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path='/vip_reg' element={<VipDevelop />} />
+          <Route path='/vip_reg' element={<VipUpgrade />} />
           <Route
             path="/"
             element={
