@@ -103,6 +103,10 @@ const VipUpgrade = () => {
     }
   }
 
+  const Notify = () => {
+    window.alert('Tính năng này sẽ được phát triển');
+  }
+
   return (
     <div className='container'>
       <div className="row mt-4">
@@ -113,6 +117,9 @@ const VipUpgrade = () => {
         </div>
         <div className="col-7">
         </div>
+        <div  className="col-3">
+          <button className='btn btn-sm btn-warning' onClick={Notify}>Gỡ bỏ tài khoản</button>
+        </div>
        
       </div>
       <div className="row">
@@ -121,9 +128,23 @@ const VipUpgrade = () => {
           <p><i>Thiết lập mở rộng trải nghiệm sử dụng cho tài khoản của bạn</i></p>
           <div className='mt-5'>
             {(checkAccountStatus == '1') ? (
-              <button onClick={DkVip} className='btn btn-warning'>Thiết lập VIP</button> 
+              <>
+                <div className='mb-1'>
+                  <button onClick={DkVip} className='btn btn-warning'>Thiết lập VIP</button> 
+                </div>
+                <div className='mt-2'>
+                  <small><i>Cho phép tối đa thêm vào 12 nội dung thư mỗi phút</i></small>
+                </div>
+              </>              
             ) : (
-              <button onClick={HuyVip} className='btn btn-danger'>Hủy bỏ VIP (yêu cầu đăng nhập lại)</button>
+              <>
+                <div  className='mb-1'>
+                  <button onClick={HuyVip} className='btn btn-danger'>Hủy bỏ VIP (yêu cầu đăng nhập lại)</button>
+                </div>
+                <div  className='mt-2'>
+                  <small><i>Giới hạn lại tối đa 3 nội dung thư mỗi phút</i></small>
+                </div>
+              </>
             )}      
           </div>
         </div>      
