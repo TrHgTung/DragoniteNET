@@ -17,12 +17,13 @@ function App() {
     <Router>
       <Routes>
         <Route path='/welcome' element={<Welcome />} />
-        <Route path='/vip_reg' element={<VipDevelop />} />
+
       </Routes>
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path='/vip_reg' element={<VipDevelop />} />
           <Route
             path="/"
             element={

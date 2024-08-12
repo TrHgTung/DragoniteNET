@@ -19,6 +19,7 @@ const {Lucario} = pokemon_color;
 const Welcome = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
+  localStorage.removeItem('key_access');
   const [auth, setAuth] = useState({
     token : localStorage.getItem('token') || null,
     isAuthenticated : localStorage.getItem('token') ? true : false
@@ -27,6 +28,7 @@ const Welcome = () => {
   const handleNavigation = () => {
     const check_username = localStorage.getItem('token');
     if (check_username) {
+      localStorage.setItem('key_access', 'ok');
       navigate('/');
     } else {
       navigate('/login');
