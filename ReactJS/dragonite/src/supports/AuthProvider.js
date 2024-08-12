@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        console.log('Auth status:', auth);
+        // console.log('Auth status:', auth);
         if (!loading && !auth.isAuthenticated && key_access != null) {
             navigate('/login');
         }

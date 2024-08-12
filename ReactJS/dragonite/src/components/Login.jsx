@@ -29,7 +29,7 @@ const Login = () => {
             }, { withCredentials: true });
 
             const { token } = response.data;
-           
+            
             if (token) {
                 login(token); 
                 axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -49,8 +49,8 @@ const Login = () => {
                 localStorage.setItem('key_account', response.data.status);
                 navigate('/');
             } else {
-                console.log('Không khởi tạo được token');
-                toast.error('Không khởi tạo được token.', {
+                console.log('Error');
+                toast.error('Error' , {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -63,7 +63,7 @@ const Login = () => {
             
         }
         catch (error) {
-            toast.error('Sai thông tin đăng nhập.', {
+            toast.error('Error', {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -72,7 +72,7 @@ const Login = () => {
                 draggable: true,
                 progress: undefined,
             });
-            console.log(error);
+            console.log('Error');
         }
     };
   

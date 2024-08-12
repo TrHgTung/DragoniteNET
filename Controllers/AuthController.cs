@@ -122,11 +122,17 @@ namespace DragoniteNET.Controllers
             var user = await _context.User.SingleOrDefaultAsync(u => u.Email == request.Email); // lay ra thong tin user
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password) /*|| user.Status == 0*/)
             {
-                return Unauthorized("Thông tin đăng nhập sai");
+                return Unauthorized(new
+                {
+                    message = "Thông tin đăng nhập sai"
+                });
             }
             else if (user.Status == 0)
             {
-                return Unauthorized("Tài khoản đã bị khóa");
+                return Unauthorized(new
+                {
+                    message = "Tài khoản của bạn đã bị khóa"
+                });
             }
 
             var token = CreateToken(user);
@@ -187,7 +193,7 @@ namespace DragoniteNET.Controllers
             {
                 return NotFound();
             }
-            getUser.Status = 1; // check status
+            getUser.Status = 1;
 
             try
             {
@@ -198,6 +204,32 @@ namespace DragoniteNET.Controllers
                 return NotFound();
             }
             //await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        
+        [HttpPatch("deleteaccount")]
+        [Authorize]
+        public async Task<IActionResult> DeleteAccount()
+        {
+            var getGuidID = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Actor)?.Value;
+            var guid = new Guid(getGuidID);
+            var getUser = await _context.User.FindAsync(guid);
+
+            if (getUser == null)
+            {
+                return NotFound();
+            }
+            getUser.Status = 0;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException) when (!_context.User.Any(e => e.Id == guid))
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }

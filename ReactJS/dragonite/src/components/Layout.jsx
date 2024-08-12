@@ -273,8 +273,8 @@ const Layout = ()  => {
             <strong>**</strong></i></small>
           </div>
           <div className="col-md-2 col-2">
-            <div className='mt-4'>
-              <Link to='/vip_reg' className='no-underline-link'>Tùy chỉnh tài khoản?</Link>
+            <div className='mt-4 text-center'>
+              <Link to='/vip_reg' className='no-underline-link mb-3'>Tùy chỉnh tài khoản?</Link>
               <button onClick={logout} className='btn btn-sm btn-danger'>Đăng xuất</button>
             </div>
           </div>

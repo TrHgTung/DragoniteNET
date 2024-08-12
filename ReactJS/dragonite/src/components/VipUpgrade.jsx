@@ -103,9 +103,55 @@ const VipUpgrade = () => {
     }
   }
 
-  const Notify = () => {
-    window.alert('Tính năng này sẽ được phát triển');
+  const DeleteAccount = async () => {
+    if(window.confirm('Nếu đồng ý, bạn sẽ không thể truy cập lại dữ liệu của mình. Vẫn tiếp tục?') == true){
+      // patch: /deleteaccount
+      try{
+        const response = await axios.patch(`${SERVER_API}/deleteaccount`, null ,{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json',
+          }
+        }, {
+          withCredentials: true 
+        });
+        if (response.data.success) {
+          localStorage.clear();
+          window.alert('Đã xóa tài khoản thành công, tạm biệt bạn');
+          console.log('Đã xóa tài khoản');
+          navigate('/login');
+          
+          // window.location.reload();
+        } else {
+            toast.warning('Hãy tải lại trang', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+              });
+            // console.log(response.headers)
+            localStorage.clear();
+            window.alert('Đã xóa tài khoản thành công, tạm biệt bạn');
+            console.log('Đã xóa tài khoản');
+            navigate('/login');
+           // console.error('Không thể hoàn thành, có lỗi xảy ra');
+        }
+      }
+      catch(e){
+        console.log(e);
+      }
+      // return ;
+    }
+      
+    
+    else{
+      return;
+    }
   }
+  
 
   return (
     <div className='container'>
@@ -118,7 +164,7 @@ const VipUpgrade = () => {
         <div className="col-7">
         </div>
         <div  className="col-3">
-          <button className='btn btn-sm btn-warning' onClick={Notify}>Gỡ bỏ tài khoản</button>
+          <button className='btn btn-sm btn-warning' onClick={DeleteAccount}>Gỡ bỏ tài khoản</button>
         </div>
        
       </div>
