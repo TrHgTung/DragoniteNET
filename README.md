@@ -1,7 +1,7 @@
 ﻿<h1>Dragonite - Một ứng dụng gửi thư điện tử đồng loạt với .NET Core và ReactJS</h1>
 <h2>GIỚI THIỆU</h2>
 
-<h6>Phiên bản: 1.1 - MIT license</h6>
+<h6>Phiên bản: 1.3 - MIT license</h6>
 <p>Một hệ thống nhằm lưu trữ nhiều nội dung thư điện tử theo danh sách và cho phép gửi đi đồng loạt </p>
 
 - Tác quyền: <br>
@@ -24,6 +24,18 @@
 <h4>❗Ver. 1.1:</h5>
 
 - Thêm Phân trang (ở trang Lịch sử mail)
+
+<br>
+
+<h4>❗Ver. 1.2:</h5>
+
+- Giới hạn số lượng nội dung thư có thể thêm trong mỗi một phút, và tùy vào trạng thái tài khoản (VIP = 12 req/min ; noVIP = 3 req/min)
+
+<br>
+
+<h4>❗Ver. 1.3:</h5>
+
+- Cho phép gỡ bỏ tài khoản
 
 <br>
 
@@ -167,7 +179,7 @@
 "the_number_of_mail_sent": 1
 }
 
-<h4>7. Response xem đề xuất:</h4>
+<h4>7. Response xem đề xuất nội dung thư:</h4>
 
 {
 "data": [

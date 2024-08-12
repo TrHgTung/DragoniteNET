@@ -42,7 +42,7 @@ builder.Services.AddDbContext<DtaContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dragonite API", Version = "1.2" });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Dragonite API", Version = "1.3" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
