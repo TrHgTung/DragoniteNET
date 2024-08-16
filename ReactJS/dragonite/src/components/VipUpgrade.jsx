@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { toast } from 'react-toastify';
 import host from '../config/host.json';
 import axios from 'axios';
+import Footer from './Footer';
 
 const {SERVER_API} = host;
 const {API_ENDPOINT} = host;
@@ -202,9 +203,9 @@ const VipUpgrade = () => {
           <img src='/bg/Dragonite2.png' alt="Register VIP" />
        )}
       </div>
-      {/* <div className='ms-4 mb-4'>
-        <p>Hình ảnh: The Pokémon Company / Game Freak / Nintendo (1996)</p>
-      </div> */}
+      <div>
+        <Footer />
+      </div>
     </div>
   )
 }

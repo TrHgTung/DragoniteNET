@@ -10,6 +10,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { useAuth } from '../supports/AuthProvider';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Footer from './Footer';
 // import './css/hover.css';
 
 const {SERVER_API} = host;
@@ -183,7 +184,7 @@ const Layout = ()  => {
     localStorage.removeItem('email');
     localStorage.removeItem('SMTP_password');
     localStorage.removeItem('assistant');
-    // localStorage.removeItem('pokemon_name');
+    localStorage.removeItem('key_account');
     setAuth({ 
         token: null,
         isAuthenticated: false 
@@ -344,6 +345,9 @@ const Layout = ()  => {
           </div>
           <small><strong>*</strong><i>: Đây là địa chỉ e-mail của bạn, nó cùng với mật khẩu ứng dụng SMTP được dùng để thực thi việc gửi thư e-mail</i></small> <br />
           <small><strong>**</strong><i>: Trợ lý là người bạn được chọn ngẫu nhiên trong mỗi phiên đăng nhập, sẽ giúp giữ chân bạn ở lại ứng dụng lâu hơn</i></small><br />
+        </div>
+        <div>
+          <Footer />
         </div>
       </div>
     )

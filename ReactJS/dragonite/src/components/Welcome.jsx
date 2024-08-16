@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
 import { toast } from 'react-toastify';
 import pokemon_color from '../config/pokemon-color.json';
+import Footer from './Footer';
 
 
 const {Venusaur} = pokemon_color;
@@ -89,6 +90,7 @@ const Welcome = () => {
     localStorage.removeItem('email');
     localStorage.removeItem('SMTP_password');
     localStorage.removeItem('assistant');
+    localStorage.removeItem('key_account');
     setAuth({ 
         token: null,
         isAuthenticated: false 
@@ -147,6 +149,9 @@ const Welcome = () => {
       </div>
       <div className='ms-4 mb-4'>
         <p>Hình ảnh: The Pokémon Company / Game Freak / Nintendo (1996)</p>
+      </div>
+      <div>
+        <Footer />
       </div>
     </>
   )

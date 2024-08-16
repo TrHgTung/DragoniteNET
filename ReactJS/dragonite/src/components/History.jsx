@@ -5,6 +5,7 @@ import { useAuth } from '../supports/AuthProvider';
 import host from '../config/host.json';
 import pokemon_color from '../config/pokemon-color.json';
 import { toast } from 'react-toastify';
+import Footer from './Footer';
 
 const {SERVER_API} = host;
 const {API_ENDPOINT} = host;
@@ -194,8 +195,8 @@ const Task = () => {
                           <tr key={mails.id}>
                               <td>{stt++}</td>
                               <td>{mails.mailId}</td>
-                              <td>{mails.mailSubject}</td>
-                              <td>{mails.mailContent}</td>
+                              <td>{mails.mailSubject.substring(0, 100)} ...</td>
+                              <td>{mails.mailContent.substring(0, 150)} ...</td>
                               <td>{mails.attachment == null && <p>Không có</p>}
                                   {mails.attachment != '' && mails.attachment}</td>
                               <td>{mails.toAddress}</td>
@@ -216,8 +217,8 @@ const Task = () => {
                                 <tr key={mails.id}>
                                     <td>{stt++}</td>
                                     <td>{mails.mailId}</td>
-                                    <td>{mails.mailSubject}</td>
-                                    <td>{mails.mailContent}</td>
+                                    <td>{mails.mailSubject.substring(0, 100)} ...</td>
+                                    <td>{mails.mailContent.substring(0, 150)} ...</td>
                                     <td>{mails.attachment == null && <p>Không có</p>}
                                         {mails.attachment != '' && mails.attachment}</td>
                                     <td>{mails.toAddress}</td>
@@ -261,6 +262,9 @@ const Task = () => {
                         
                     )()} */}
           </div>
+        </div>
+        <div>
+          <Footer />
         </div>
       </div>
     )

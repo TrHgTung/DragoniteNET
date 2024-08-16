@@ -147,8 +147,8 @@ const Task = () => {
                             (
                                 <tr key={mails.id}>
                                     <td>{stt++}</td>
-                                    <td>{mails.mailSubject}</td>
-                                    <td>{mails.mailContent}</td>
+                                    <td>{mails.mailSubject.substring(0, 100)} ...</td>
+                                    <td>{mails.mailContent.substring(0, 150)} ...</td>
                                     <td>{mails.attachment == null && <p>Không có</p>}
                                         {mails.attachment != '' && mails.attachment}</td>
                                     <td>{mails.toAddress}</td>
