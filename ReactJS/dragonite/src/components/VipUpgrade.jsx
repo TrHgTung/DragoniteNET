@@ -180,7 +180,8 @@ const VipUpgrade = () => {
                   <button onClick={DkVip} className='btn btn-warning'>Thiết lập VIP</button> 
                 </div>
                 <div className='mt-2'>
-                  <small><i>Cho phép tối đa thêm vào 12 nội dung thư mỗi phút</i></small>
+                  <small><i>Cho phép tối đa thêm vào 12 nội dung thư mỗi phút</i></small> <br />
+                  <small><i>Tải lên tệp có kích cỡ đến 20MB</i></small>
                 </div>
               </>              
             ) : (
@@ -189,7 +190,8 @@ const VipUpgrade = () => {
                   <button onClick={HuyVip} className='btn btn-danger'>Hủy bỏ VIP (yêu cầu đăng nhập lại)</button>
                 </div>
                 <div  className='mt-2'>
-                  <small><i>Giới hạn lại tối đa 3 nội dung thư mỗi phút</i></small>
+                  <small><i>Giới hạn lại tối đa 3 nội dung thư mỗi phút</i></small> <br />
+                  <small><i>Cho phép tải lên tệp chỉ tối đa 10MB</i></small>
                 </div>
               </>
             )}      

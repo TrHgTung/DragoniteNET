@@ -28,6 +28,8 @@ const {Clefable} = pokemon_color;
 const {Lucario} = pokemon_color;
 
 const Layout = ()  => {
+  const maxLengthNumber_MailContent = 300;
+  const maxLengthNumber_MailSubject = 100;
   const [file, setFile] = useState(null);
   const maxFileSizeVIP = 20 * 1024 * 1024; // 20 MB
   const maxFileSize = 10 * 1024 * 1024; // 10 MB
@@ -35,6 +37,7 @@ const Layout = ()  => {
     token : localStorage.getItem('token') || null,
     isAuthenticated : localStorage.getItem('token') ? true : false
   });
+  // const [accountStat, setAccountStat] = useState('');
 
   const [formData, setFormData] = useState({
     MailSubject: '',
@@ -45,6 +48,11 @@ const Layout = ()  => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (value.length === maxLengthNumber_MailSubject) {
+      window.alert(`Số lượng ký tự không được vượt quá ${maxLengthNumber_MailSubject} ký tự.`);
+      return; // Dừng lại nếu vượt quá giới hạn
+    }
+    // console.log(value)
     setFormData({
         ...formData,
         [name]: value
@@ -71,8 +79,15 @@ const Layout = ()  => {
     }
   };
 
+ 
   const handleEditorChange = (event, editor) => {
     const data = editor.getData();
+    const contentLength = data.replace(/<[^>]*>/g, '').length; // Loại bỏ các ky tu HTML để đếm ký tự thực
+    if (contentLength > maxLengthNumber_MailContent) {
+      // Hoàn tác hành động nếu vượt quá số ký tự
+      editor.setData(data.substring(0, maxLengthNumber_MailContent));
+      alert(`Số lượng ký tự không được vượt quá ${maxLengthNumber_MailContent} ký tự.`);
+    }
     setFormData({
       ...formData,
       MailContent: data
@@ -164,7 +179,6 @@ const Layout = ()  => {
               draggable: true,
             });
         } else {
-           
             toast.success('Thêm thư thành công! Hãy tải lại trang', {
               position: "top-right",
               autoClose: 5000,
@@ -270,6 +284,15 @@ const Layout = ()  => {
       height: '800px'
     };
 
+    let accountStat = '';
+    const checkAcc = localStorage.getItem('key_account').toString();
+    if(checkAcc == '1') {
+      accountStat = '10MB';
+    }
+    else {
+      accountStat = '20MB';
+    }
+
     return (
       <div className='container application-classname'>
         <div className="row">
@@ -306,7 +329,7 @@ const Layout = ()  => {
         <div className="row">
             <div className="col-md-4">
                 <h5>Thêm nội dung thư của bạn</h5>
-                <small><i>Note: Tệp đính kèm (file attachment) là không cần thiết</i></small>
+                <small><i>Note: Tệp đính kèm (file attachment) là trường không bắt buộc và có giới hạn về kích cỡ tệp được tải lên, tùy vào loại tài khoản của bạn</i></small>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3 mt-3">
                         <label htmlFor='MailSubject' className="form-label">Tiêu đề thư (e-mail subject):</label>
@@ -314,7 +337,8 @@ const Layout = ()  => {
                           className='form-control' 
                           id='MailSubject' 
                           name='MailSubject' 
-                          placeholder='Nhập tiêu đề ...' 
+                          placeholder='Nhập tiêu đề (tối đa 100 ký tự - hỗ trợ tiếng Việt) ...' 
+                          maxlength="100"
                           value={formData.MailSubject}
                           onChange={handleChange}
                         />
@@ -333,7 +357,7 @@ const Layout = ()  => {
                         <small>Lời khuyên: <Link to="/suggest" className='no-underline-link'>Lấy nội dung được gợi ý</Link></small>
                     </div>
                     <div className="mb-3 mt-3">
-                        <label htmlFor='Attachment' className="form-label">Tệp đính kèm (file attachment):</label>
+                        <label htmlFor='Attachment' className="form-label">Tệp đính kèm (file attachment - max: {(accountStat)}):</label>
                         <input type='file' 
                           className='form-control' 
                           id='Attachment' 
@@ -348,7 +372,8 @@ const Layout = ()  => {
                           className='form-control' 
                           id='ToAddress' 
                           name='ToAddress' 
-                          placeholder='Nhập Địa chỉ gửi...' 
+                          placeholder='Nhập Địa chỉ gửi (tối đa 100 ký tự) ...' 
+                          maxlength="100"
                           value={formData.ToAddress}
                           onChange={handleChange}
                         />
