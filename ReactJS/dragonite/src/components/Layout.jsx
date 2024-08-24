@@ -28,6 +28,9 @@ const {Clefable} = pokemon_color;
 const {Lucario} = pokemon_color;
 
 const Layout = ()  => {
+  const [file, setFile] = useState(null);
+  const maxFileSizeVIP = 20 * 1024 * 1024; // 20 MB
+  const maxFileSize = 10 * 1024 * 1024; // 10 MB
   const [auth, setAuth] = useState({
     token : localStorage.getItem('token') || null,
     isAuthenticated : localStorage.getItem('token') ? true : false
@@ -41,11 +44,31 @@ const Layout = ()  => {
   });
 
   const handleChange = (e) => {
-    const { name, files, value } = e.target;
+    const { name, value } = e.target;
     setFormData({
         ...formData,
-        [name]: files ? files[0] : value
+        [name]: value
     });
+  };
+
+  const handleFileChange = (e) => {
+    const { name, files, value } = e.target;
+    const selectedFile = e.target.files[0];
+    if((selectedFile.size > maxFileSizeVIP) && (localStorage.getItem('key_account') == '2')){
+      window.alert('Vui lòng chọn tệp nhỏ hơn 20MB');
+      e.target.value = '';
+    }
+    else if((selectedFile.size > maxFileSize) && (localStorage.getItem('key_account') == '1')){
+      window.alert('Vui lòng chọn tệp nhỏ hơn 10MB');
+      e.target.value = '';
+    }
+    else{
+      setFile(selectedFile);
+      setFormData({
+        ...formData,
+        [name]: selectedFile
+      });
+    }
   };
 
   const handleEditorChange = (event, editor) => {
@@ -316,7 +339,7 @@ const Layout = ()  => {
                           id='Attachment' 
                           name='Attachment' 
                           // value={formData.attachment}
-                          onChange={handleChange}
+                          onChange={handleFileChange}
                         />
                     </div>
                     <div className="mb-3 mt-3">

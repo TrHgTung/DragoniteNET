@@ -244,30 +244,32 @@ namespace DragoniteNET.Controllers
         // khi click Ẩn thư, thi se update status cua mail la "i" => ko hien thi len giao dien chinh
         [HttpPatch("{id}")]
         [Authorize]
-        public async Task<IActionResult> RemoveMail(int id/*, [FromBody] JsonPatchDocument<MailPatchDto> mailPatch*/)
+        public async Task<IActionResult> RemoveMail(string id/* string mailId, [FromBody] JsonPatchDocument<MailPatchDto> mailPatch*/)
         {
-        
+            if (!Guid.TryParse(id, out Guid guidId))
+            {
+                return BadRequest("Khong dung dinh dang Guid cua Id");
+            }
 
-            var getMail = await _context.Mail.FindAsync(id);
+            var getMail = await _context.Mail.FindAsync(guidId);
+            //var getMail = await _context.Mail.FirstOrDefaultAsync(p => p.MailId == mailId.ToString());
 
             if(getMail == null)
             {
                 return NotFound();
             }
-
-            //getMail.Status = "i";
             getMail.Status = "y"; // cho front end nhan du lieu
-
 
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException) when (!_context.Mail.Any(e => e.Id.ToString() == id.ToString()))
+            //catch (DbUpdateConcurrencyException) when (!_context.Mail.Any(e => e.MailId.ToString() == mailId.ToString()))
+            //catch (DbUpdateConcurrencyException) when (!_context.Mail.Any(e => e.Id.ToString() == id.ToString()))
+            catch (DbUpdateConcurrencyException) when (!_context.Mail.Any(e => e.Id == guidId))
             {
                 return NotFound();
             }
-
 
             return NoContent();
         }
