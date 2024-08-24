@@ -47,6 +47,7 @@ const Login = () => {
                 localStorage.setItem('user_id', response.data.user.userId);
                 localStorage.setItem('SMTP_password', response.data.user.smtpPassword);
                 localStorage.setItem('key_account', response.data.status);
+                localStorage.setItem('first_access', '1');
                 navigate('/');
             } else {
                 console.log('Error');

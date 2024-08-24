@@ -11,6 +11,8 @@ import { useAuth } from '../supports/AuthProvider';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import Footer from './Footer';
+// import { Modal } from 'bootstrap';
+import Modal from './Modal';
 // import './css/hover.css';
 
 const {SERVER_API} = host;
@@ -293,8 +295,25 @@ const Layout = ()  => {
       accountStat = '20MB';
     }
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    
+    useEffect(() => {
+      if(localStorage.getItem('first_access')){
+        setIsModalOpen(true);
+      }
+      // Mở modal khi component được render va khi co item 'first_access' trong localStorage
+    }, []);
+
+    const closeModal = () => {
+      setIsModalOpen(false);
+      localStorage.removeItem('first_access');
+    };
+
+
     return (
       <div className='container application-classname'>
+         <Modal isOpen={isModalOpen} onClose={closeModal}>   </Modal>      
         <div className="row">
           <div className="col-2 col-md-2 mb-4 mt-3">
             <Link to="/welcome" className='no-underline-link'>&lt; Quay lại Trang chủ</Link>
@@ -397,6 +416,7 @@ const Layout = ()  => {
         <div>
           <Footer />
         </div>
+       
       </div>
     )
   }
