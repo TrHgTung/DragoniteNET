@@ -95,6 +95,7 @@ namespace DragoniteNET.Controllers
         [HttpPost]
         [Authorize]
         [EnableRateLimiting("LimitedRequests")] // use policy
+        [RequestFormLimits(MultipartBodyLengthLimit = 10000000)]
         public async Task<IActionResult> SaveMail([FromForm]  MailDto mailDto)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value; // lay gia tri UserId tu Claim
@@ -151,6 +152,7 @@ namespace DragoniteNET.Controllers
         [HttpPost("/vip/post")]
         [Authorize]
         [EnableRateLimiting("LimitedVipRequests")] // use policy (VIP)
+        [RequestFormLimits(MultipartBodyLengthLimit = 20000000)]
         public async Task<IActionResult> SaveVipMail([FromForm] MailDto mailDto)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value; // lay gia tri UserId tu Claim
